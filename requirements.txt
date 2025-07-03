@@ -1,0 +1,46 @@
+# Core Data Science and Analysis
+pandas==2.1.4
+numpy==1.24.3
+matplotlib==3.7.1
+seaborn==0.12.2
+plotly==5.17.0
+
+# Database and SQL
+sqlite3
+sqlalchemy==2.0.23
+pymongo==4.6.0
+
+# Jupyter and Notebooks
+jupyter==1.0.0
+jupyterlab==4.0.9
+ipykernel==6.27.1
+ipywidgets==8.1.1
+
+# Data Visualization and BI
+dash==2.16.1
+streamlit==1.29.0
+bokeh==3.3.2
+
+# Banking and Financial Analysis
+yfinance==0.2.25
+financedatabase==2.2.1
+quantlib==1.32
+
+# Utilities and Development
+python-dotenv==1.0.0
+openpyxl==3.1.2
+xlsxwriter==3.1.9
+requests==2.31.0
+beautifulsoup4==4.12.2
+
+# Testing and Quality
+pytest==7.4.3
+black==23.11.0
+flake8==6.1.0
+
+# Documentation
+sphinx==7.2.6
+mkdocs==1.5.3
+
+# Environment Management
+python-decouple==3.8
