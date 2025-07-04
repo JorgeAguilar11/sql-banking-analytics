@@ -58,28 +58,18 @@ def main():
     # � ESCRIBE TUS PROPIAS CONSULTAS SQL AQUÍ
     # ===========================================
     
-    # EJEMPLO BÁSICO: (puedes borrarlo y escribir tu propia consulta)
-    mi_consulta = """
-    SELECT * FROM clientes LIMIT 5;
-    """
-    ejecutar_consulta(conn, mi_consulta, "Mi primera consulta SQL")
-    
     # ===========================================
-    # 💡 ÁREA DE PRÁCTICA LIBRE
+    # 💡 TU CONSULTA SQL
     # ===========================================
-    # Aquí puedes escribir cualquier consulta SQL que quieras probar.
-    # Solo cambia el contenido de 'mi_consulta_libre' y ejecuta el archivo.
     
     mi_consulta_libre = """
-    -- Escribe aquí tu consulta SQL
-    -- Por ejemplo:
-    -- SELECT nombres, apellidos, ciudad FROM clientes WHERE ciudad = 'Medellín';
-    
-    SELECT nombres, apellidos, ciudad 
-    FROM clientes 
-    WHERE estado = 'ACTIVO';
+    -- Escribe tu consulta SQL aquí
+    select nombres, apellidos, ingresos_mensuales,ciudad
+    from clientes
+    where ingresos_mensuales > 4000000
+    order by ingresos_mensuales desc;
     """
-    ejecutar_consulta(conn, mi_consulta_libre, "Mi consulta personalizada")
+    ejecutar_consulta(conn, mi_consulta_libre, "Mi consulta SQL")
     
     # ===========================================
     # 🎯 SEGUNDA CONSULTA (opcional)
@@ -93,8 +83,8 @@ def main():
     # ejecutar_consulta(conn, segunda_consulta, "Mi segunda consulta")
     
     # Cerrar conexión
-    conn.close()
-    print("🔌 Conexión cerrada")
+    #conn.close()
+    #print("🔌 Conexión cerrada")
     print("¡Práctica completada! 🎉")
 
 if __name__ == "__main__":
