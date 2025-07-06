@@ -1,52 +1,230 @@
-# 💪 Ejercicios Prácticos: Agregaciones y GROUP BY
+# 💪 Prácticas SQL Básicas: Agregaciones y GROUP BY
 
-## 🎯 **Instrucciones**
-Estos ejercicios te ayudarán a dominar las agregaciones en el contexto bancario. Cada ejercicio incluye:
-- 🎪 **Contexto** del problema bancario
-- 📋 **Requisitos** específicos
-- 💡 **Pistas** para la solución
-- ✅ **Validación** de resultados
+## 🎯 **Objetivos de Aprendizaje**
+En esta práctica dominarás las agregaciones SQL fundamentales aplicadas al análisis bancario:
+- 🧮 **Funciones básicas**: COUNT, SUM, AVG, MAX, MIN
+- 📊 **GROUP BY simple**: Agrupaciones por una dimensión
+- � **Análisis descriptivo**: Métricas fundamentales de negocio
 
 ---
 
-## 🔰 **Nivel Básico**
+## 🏆 **Reto 1: Métricas Fundamentales del Banco**
 
-### **Ejercicio 1: Métricas Fundamentales**
-**Contexto**: El gerente general necesita un reporte básico del estado del banco.
+### 📝 **Explicación del Problema**
+Como **Analista de Datos** del banco, el Director General te ha solicitado un **dashboard ejecutivo** con las métricas fundamentales que debe revisar cada mañana:
+- 🏦 Estado general de la institución
+- 👥 Base de clientes activos
+- 💰 Concentración de saldos
+- 📈 Indicadores clave de performance
 
-**Requisitos**:
-1. Total de clientes activos
-2. Total de cuentas activas
-3. Saldo total del banco
-4. Saldo promedio por cuenta
-5. Cliente con mayor saldo total
+### 🎯 **Contexto Bancario**
+**Escenario**: Es lunes por la mañana y el CEO necesita conocer el estado actual del banco antes de la reunión de comité ejecutivo a las 9:00 AM.
 
-**Pista**: Combina varias consultas simples con agregaciones básicas.
+### 📋 **Requisitos Específicos**
+1. **Total de clientes activos** en el sistema
+2. **Total de cuentas abiertas** y operativas
+3. **Saldo total** bajo administración del banco
+4. **Saldo promedio** por cuenta para medir concentración
+5. **Cliente con mayor patrimonio** para análisis VIP
 
+### 💡 **Estrategia de Solución**
 ```sql
--- Tu solución aquí:
--- Consulta 1: Clientes activos
-SELECT COUNT(*) as clientes_activos FROM clientes WHERE estado = 'ACTIVO';
+-- Paso 1: Análisis de clientes activos
+-- Pregunta: ¿Cuántos clientes están actualmente operando con el banco?
+SELECT COUNT(*) as clientes_activos 
+FROM clientes 
+WHERE estado = 'ACTIVO';
 
--- Consulta 2: Cuentas activas
--- Continúa...
+-- Paso 2: Análisis de cuentas operativas
+-- Pregunta: ¿Cuántas cuentas tenemos abiertas?
+SELECT COUNT(*) as cuentas_abiertas 
+FROM cuentas 
+WHERE estado_cuenta = 'ACTIVA';
+
+-- Paso 3: Saldo total bajo administración
+-- Pregunta: ¿Cuánto dinero administra el banco?
+SELECT 
+    SUM(saldo_actual) as saldo_total_banco,
+    ROUND(SUM(saldo_actual), 2) as saldo_total_formateado
+FROM cuentas 
+WHERE estado_cuenta = 'ACTIVA';
+
+-- Paso 4: Saldo promedio por cuenta
+-- Pregunta: ¿Cuál es la concentración promedio de saldos?
+SELECT 
+    AVG(saldo_actual) as saldo_promedio,
+    ROUND(AVG(saldo_actual), 2) as saldo_promedio_formateado
+FROM cuentas 
+WHERE estado_cuenta = 'ACTIVA';
+
+-- Paso 5: Cliente VIP con mayor patrimonio
+-- Pregunta: ¿Quién es nuestro cliente más valioso?
+SELECT 
+    c.cliente_id,
+    c.nombre_completo,
+    SUM(ct.saldo_actual) as patrimonio_total
+FROM clientes c
+JOIN cuentas ct ON c.cliente_id = ct.cliente_id
+WHERE c.estado = 'ACTIVO' AND ct.estado_cuenta = 'ACTIVA'
+GROUP BY c.cliente_id, c.nombre_completo
+ORDER BY patrimonio_total DESC
+LIMIT 1;
 ```
 
+### ✅ **Resultados Esperados**
+```
+Clientes Activos: 1,247
+Cuentas Abiertas: 2,156
+Saldo Total: $127,890,234.56
+Saldo Promedio: $59,335.78
+Cliente VIP: Juan Pérez López ($892,453.21)
+```
+
+### 🎯 **Conclusión del Reto**
+**Aprendizaje clave**: Las funciones de agregación básicas (COUNT, SUM, AVG) son los pilares del análisis bancario. Con estas consultas simples puedes generar un dashboard ejecutivo completo.
+
 ---
 
-### **Ejercicio 2: Análisis por Producto**
-**Contexto**: El área de productos quiere evaluar el performance de cada categoría.
+## 🏆 **Reto 2: Análisis por Categoría de Producto**
 
-**Requisitos**:
-1. Por cada categoría de producto mostrar:
-   - Número de cuentas
-   - Saldo total
-   - Saldo promedio
-   - Saldo máximo
-   - Saldo mínimo
-2. Ordenar por saldo total descendente
+### 📝 **Explicación del Problema**
+El **Gerente de Productos** necesita evaluar el **performance de cada categoría** de productos financieros para la reunión mensual de estrategia:
+- 📊 Distribución de cuentas por producto
+- 💰 Concentración de saldos por categoría
+- 📈 Oportunidades de crecimiento
 
-**Pista**: Usa JOIN entre `productos_financieros` y `cuentas`, luego GROUP BY por categoría.
+### 🎯 **Contexto Bancario**
+**Escenario**: Fin de mes, necesitas preparar el reporte mensual de productos para identificar qué categorías están funcionando bien y cuáles necesitan estrategias de impulso.
+
+### 📋 **Requisitos Específicos**
+Por cada **categoría de producto** mostrar:
+1. **Número de cuentas** abiertas
+2. **Saldo total** acumulado
+3. **Saldo promedio** por cuenta
+4. **Saldo máximo** (cuenta más grande)
+5. **Saldo mínimo** (cuenta más pequeña)
+6. **Ordenar** por saldo total descendente
+
+### 💡 **Estrategia de Solución**
+```sql
+-- Consulta completa con explicación paso a paso
+SELECT 
+    -- Dimensión de agrupación
+    pf.categoria_producto,
+    
+    -- Métricas de volumen
+    COUNT(c.cuenta_id) as numero_cuentas,
+    
+    -- Métricas monetarias
+    SUM(c.saldo_actual) as saldo_total,
+    ROUND(AVG(c.saldo_actual), 2) as saldo_promedio,
+    MAX(c.saldo_actual) as saldo_maximo,
+    MIN(c.saldo_actual) as saldo_minimo,
+    
+    -- Métrica calculada adicional
+    ROUND(SUM(c.saldo_actual) / COUNT(c.cuenta_id), 2) as saldo_promedio_verificacion
+    
+FROM productos_financieros pf
+JOIN cuentas c ON pf.producto_id = c.producto_id
+WHERE c.estado_cuenta = 'ACTIVA'
+GROUP BY pf.categoria_producto
+ORDER BY saldo_total DESC;
+```
+
+### ✅ **Resultados Esperados**
+```
+CATEGORIA_PRODUCTO  | CUENTAS | SALDO_TOTAL    | SALDO_PROMEDIO | SALDO_MAX   | SALDO_MIN
+--------------------|---------|----------------|----------------|-------------|----------
+Cuenta Corriente    | 856     | $45,234,567.89 | $52,854.32     | $892,453.21 | $1,500.00
+Cuenta de Ahorros   | 743     | $38,567,234.12 | $51,923.45     | $654,789.33 | $500.00
+Cuenta Premium      | 234     | $28,456,123.78 | $121,607.86    | $1,234,567.89| $25,000.00
+Cuenta Joven        | 323     | $15,632,308.77 | $48,396.93     | $234,567.12 | $100.00
+```
+
+### 🎯 **Conclusión del Reto**
+**Aprendizaje clave**: GROUP BY te permite segmentar y comparar performance entre categorías. Las Cuentas Premium tienen menor volumen pero mayor concentración de saldos (clientes VIP).
+
+---
+
+## 🧠 **REFUERZO TEÓRICO: Fundamentos de Agregaciones SQL**
+
+### 📚 **1. Conceptos Fundamentales**
+
+#### **¿Qué son las Agregaciones?**
+Las **funciones de agregación** transforman múltiples filas en un solo valor resumen:
+- 🔢 **COUNT()**: Cuenta registros
+- ➕ **SUM()**: Suma valores numéricos  
+- 📊 **AVG()**: Calcula promedio aritmético
+- ⬆️ **MAX()**: Encuentra valor máximo
+- ⬇️ **MIN()**: Encuentra valor mínimo
+
+#### **¿Cuándo usar GROUP BY?**
+```sql
+-- SIN GROUP BY: Toda la tabla se convierte en UNA fila
+SELECT COUNT(*), SUM(saldo) FROM cuentas;
+
+-- CON GROUP BY: Una fila POR CADA grupo
+SELECT categoria, COUNT(*), SUM(saldo) 
+FROM cuentas 
+GROUP BY categoria;
+```
+
+### 📊 **2. Mejores Prácticas en Banking**
+
+#### **Siempre Filtrar Datos Obsoletos**
+```sql
+-- ❌ INCORRECTO: Incluye cuentas canceladas
+SELECT AVG(saldo) FROM cuentas;
+
+-- ✅ CORRECTO: Solo cuentas activas
+SELECT AVG(saldo) FROM cuentas WHERE estado = 'ACTIVA';
+```
+
+#### **Manejar Valores NULL**
+```sql
+-- COUNT(*) cuenta todas las filas
+-- COUNT(columna) excluye NULLs
+SELECT 
+    COUNT(*) as total_registros,
+    COUNT(ingresos) as clientes_con_ingresos,
+    COUNT(*) - COUNT(ingresos) as clientes_sin_ingresos
+FROM clientes;
+```
+
+#### **Formatear Resultados Monetarios**
+```sql
+-- Para reportes ejecutivos, siempre redondea
+SELECT 
+    categoria,
+    ROUND(SUM(saldo), 2) as saldo_total,
+    ROUND(AVG(saldo), 2) as saldo_promedio
+FROM cuentas 
+GROUP BY categoria;
+```
+
+### 🎯 **3. Casos de Uso Bancarios Típicos**
+
+| Función | Caso de Uso Bancario | Ejemplo |
+|---------|---------------------|---------|
+| COUNT() | Clientes activos, Cuentas por segmento | `COUNT(*) FROM clientes WHERE estado='ACTIVO'` |
+| SUM() | Saldo total, Cartera de préstamos | `SUM(saldo_actual) FROM cuentas` |
+| AVG() | Ticket promedio, Saldo promedio | `AVG(monto) FROM transacciones` |
+| MAX() | Mayor depósito, Cuenta más grande | `MAX(saldo_actual) FROM cuentas` |
+| MIN() | Menor saldo, Tasa más competitiva | `MIN(tasa_interes) FROM productos` |
+
+### 💡 **4. Tips para el Éxito**
+
+1. **Siempre valida tus resultados**: Usa consultas de verificación
+2. **Considera valores NULL**: Entiende cómo afectan las agregaciones  
+3. **Filtra datos relevantes**: No incluyas registros inactivos o cancelados
+4. **Usa alias descriptivos**: `saldo_total` en lugar de `sum_saldo`
+5. **Redondea valores monetarios**: Usa ROUND() para reportes
+
+### 🚀 **Próximos Pasos**
+Has dominado las agregaciones básicas. Ahora estás listo para:
+- 📈 **GROUP BY múltiple** (siguiente práctica)
+- 🔍 **HAVING** para filtrar grupos
+- 📊 **Funciones de ventana** para análisis avanzado
 
 ```sql
 -- Tu solución aquí:

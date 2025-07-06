@@ -19,12 +19,20 @@ Este módulo te enseña a dominar las **agregaciones SQL** aplicadas al análisi
 
 | Archivo | Tipo | Descripción |
 |---------|------|-------------|
-| `agregaciones_groupby_bancario.ipynb` | 📓 **Notebook** | Tutorial interactivo completo con ejemplos prácticos |
-| `GUIA_TEORIA_AGREGACIONES.md` | 📖 **Teoría** | Guía teórica detallada con mejores prácticas |
-| `GUIA_PRACTICA_SQL_AVANZADO.md` | 🎯 **Práctica** | Ejercicios paso a paso con validaciones |
-| `EJERCICIOS_PRACTICOS.md` | 💪 **Ejercicios** | Retos progresivos desde básico hasta avanzado |
-| `practica_sql_avanzada.py` | 🐍 **Script** | Código Python para práctica programática |
-| `README.md` | 📋 **Guía** | Este archivo de navegación |
+| `GUIA_AGREGACIONES_BANCARIAS.md` | 🏆 **GUÍA MAESTRA** | Ejercicios 1-12 completos con casos reales |
+| `practica_agregaciones_bancarias.py` | 🐍 **Script Principal** | Práctica programática profesional |
+| `agregaciones_groupby_bancario.ipynb` | 📓 **Notebook** | Tutorial interactivo complementario |
+| `GUIA_TEORIA_AGREGACIONES.md` | 📖 **Teoría** | Fundamentos teóricos detallados |
+| `EJERCICIOS_PRACTICOS.md` | 💪 **Ejercicios** | Retos adicionales y variaciones |
+| `README.md` | � **Navegación** | Esta guía del módulo |
+
+### **🎯 Ruta de Aprendizaje Recomendada**
+
+1. **📖 Fundamentos**: Lee `GUIA_TEORIA_AGREGACIONES.md`
+2. **🏆 Práctica Principal**: Estudia `GUIA_AGREGACIONES_BANCARIAS.md`
+3. **🐍 Ejecución**: Ejecuta `practica_agregaciones_bancarias.py`
+4. **📓 Experimentación**: Explora `agregaciones_groupby_bancario.ipynb`
+5. **💪 Refuerzo**: Completa `EJERCICIOS_PRACTICOS.md`
 
 ---
 
