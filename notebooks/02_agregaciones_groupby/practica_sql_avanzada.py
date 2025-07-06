@@ -154,36 +154,99 @@ def main():
     """
     
     ejecutar_consulta(conn, segunda_consulta_avanzada, "🏆 EJERCICIO 8: Top 3 clientes más ricos")
-    #        CASE 
-    #            WHEN ingresos_mensuales > 8000000 THEN 'VIP'
-    #            ELSE 'Regular'
-    #        END as categoria
-    # FROM clientes 
-    # WHERE ingresos_mensuales > 5000000
-    # ORDER BY ingresos_mensuales DESC;
-    # """
-    # ejecutar_consulta(conn, segunda_consulta_avanzada, "🚀 Mi segunda consulta avanzada")
     
     # ===========================================
-    # 🎲 CONSULTA EXPERIMENTAL (opcional)
+    # 🎯 EJERCICIO 7: Promedio de ingresos por ciudad
     # ===========================================
     
-    # consulta_experimental = """
-    # -- Aquí puedes experimentar con consultas más complejas
-    # -- Combina múltiples WHERE, GROUP BY, HAVING, etc.
-    # 
-    # SELECT 
-    #     ciudad,
-    #     COUNT(*) as total_clientes,
-    #     AVG(ingresos_mensuales) as promedio
-    # FROM clientes 
-    # GROUP BY ciudad 
-    # HAVING COUNT(*) > 2
-    # ORDER BY total_clientes DESC;
-    # """
-    # ejecutar_consulta(conn, consulta_experimental, "🎲 Mi consulta experimental")
+    ejercicio_7 = """
+    -- ESCRIBE AQUÍ TU CONSULTA PARA EL EJERCICIO 7
+    -- Usa AVG() para calcular el promedio de ingresos por ciudad
+    -- Ejemplo: SELECT ciudad, AVG(ingresos_mensuales) as promedio FROM clientes GROUP BY ciudad
+    SELECT 
+        ciudad,
+        COUNT(*) AS total_clientes,
+        AVG(ingresos_mensuales) AS promedio_ingresos
+    FROM 
+        clientes
+    WHERE 
+        ingresos_mensuales IS NOT NULL
+    GROUP BY 
+        ciudad
+    ORDER BY 
+        promedio_ingresos DESC;   
+    """
+    ejecutar_consulta(conn, ejercicio_7, "💰 EJERCICIO 7: Promedio de ingresos por ciudad")
     
-    # Cerrar conexión
+    # ===========================================
+    # 🎯 EJERCICIO 9: Clientes de clase media
+    # ===========================================
+    
+    ejercicio_9 = """
+    -- ESCRIBE AQUÍ TU CONSULTA PARA EL EJERCICIO 9
+    -- Usa BETWEEN para filtrar clientes con ingresos entre 3M y 7M
+    -- Ejemplo: SELECT * FROM clientes WHERE ingresos_mensuales BETWEEN 3000000 AND 7000000
+    SELECT 
+        cliente_id,
+        nombres,
+        apellidos,
+        ciudad,
+        ingresos_mensuales
+    FROM 
+        clientes
+    WHERE 
+        ingresos_mensuales BETWEEN 3000000 AND 7000000
+    ORDER BY 
+        ingresos_mensuales DESC;
+    """
+    ejecutar_consulta(conn, ejercicio_9, "🏠 EJERCICIO 9: Clientes de clase media")
+    
+    # ===========================================
+    # 🎯 EJERCICIO 10: Contar clientes por segmento
+    # ===========================================
+    
+    ejercicio_10 = """
+    -- ESCRIBE AQUÍ TU CONSULTA PARA EL EJERCICIO 10
+    -- Cuenta cuántos clientes hay en cada segmento_cliente
+    -- Ejemplo: SELECT segmento_cliente, COUNT(*) FROM clientes GROUP BY segmento_cliente
+    SELECT 
+        segmento_cliente,
+        COUNT(*) AS cantidad_clientes
+    FROM 
+        clientes
+    WHERE 
+        segmento_cliente IS NOT NULL
+    GROUP BY 
+        segmento_cliente
+    ORDER BY 
+        cantidad_clientes DESC;
+    """
+    ejecutar_consulta(conn, ejercicio_10, "📊 EJERCICIO 10: Clientes por segmento")
+    
+    # ===========================================
+    # 🎯 EJERCICIO 11: Ciudad con mayor suma total
+    # ===========================================
+    
+    ejercicio_11 = """
+    -- ESCRIBE AQUÍ TU CONSULTA PARA EL EJERCICIO 11
+    -- Encuentra la ciudad con la mayor suma total de ingresos
+    -- Ejemplo: SELECT ciudad, SUM(ingresos_mensuales) FROM clientes GROUP BY ciudad ORDER BY SUM(ingresos_mensuales) DESC LIMIT 1
+        SELECT 
+            ciudad,
+            SUM(ingresos_mensuales) AS ingresos_totales
+        FROM 
+            clientes
+        WHERE 
+            ingresos_mensuales IS NOT NULL
+        GROUP BY 
+            ciudad
+        ORDER BY 
+            ingresos_totales DESC
+        LIMIT 1;
+    """
+    ejecutar_consulta(conn, ejercicio_11, "🏆 EJERCICIO 11: Ciudad con mayor suma total")
+
+    # ...existing code...
     conn.close()
     print("🔌 Conexión cerrada")
     print("🎉 ¡Práctica avanzada completada!")

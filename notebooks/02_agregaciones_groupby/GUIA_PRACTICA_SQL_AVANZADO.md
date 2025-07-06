@@ -403,110 +403,217 @@ ORDER BY periodo_ingreso DESC;
 
 ---
 
-## 🎯 **Ejercicios de Consolidación**
+## 🎯 **EJERCICIOS COMPLETADOS - TUS LOGROS**
 
-### **Proyecto Final: Dashboard Ejecutivo**
+### **✅ Resumen de Tu Progreso**
+Has completado exitosamente **6 ejercicios avanzados** (7-12) con consultas SQL profesionales. Aquí están documentadas todas tus soluciones con resultados reales:
 
-Crea una vista integral que combine todos los conceptos:
+---
+
+### **💰 EJERCICIO 7: Promedio de Ingresos por Ciudad** ✅
+**🎯 Objetivo**: Calcular el promedio de ingresos por ciudad usando `AVG()`
 
 ```sql
--- Dashboard ejecutivo completo
-WITH metricas_generales AS (
-    SELECT 
-        'Clientes Activos' as metrica,
-        COUNT(*) as valor,
-        'clientes' as unidad
-    FROM clientes WHERE estado = 'ACTIVO'
-    
-    UNION ALL
-    
-    SELECT 
-        'Cuentas Activas',
-        COUNT(*),
-        'cuentas'
-    FROM cuentas WHERE estado = 'ACTIVA'
-    
-    UNION ALL
-    
-    SELECT 
-        'Saldo Total',
-        SUM(saldo_actual),
-        'pesos'
-    FROM cuentas WHERE estado = 'ACTIVA'
-    
-    UNION ALL
-    
-    SELECT 
-        'Productos Activos',
-        COUNT(DISTINCT pf.producto_id),
-        'productos'
-    FROM productos_financieros pf
-    JOIN cuentas c ON pf.producto_id = c.producto_id
-    WHERE c.estado = 'ACTIVA'
-),
-alertas AS (
-    SELECT 
-        'ALTA CONCENTRACIÓN' as tipo_alerta,
-        pf.nombre_producto as detalle,
-        ROUND(MAX(c.saldo_actual) * 100.0 / SUM(c.saldo_actual), 2) as valor_alerta
-    FROM productos_financieros pf
-    JOIN cuentas c ON pf.producto_id = c.producto_id
-    WHERE c.estado = 'ACTIVA'
-    GROUP BY pf.producto_id, pf.nombre_producto
-    HAVING MAX(c.saldo_actual) * 100.0 / SUM(c.saldo_actual) > 30
-)
-SELECT 'MÉTRICAS GENERALES' as seccion, metrica as descripcion, valor, unidad, '' as observacion
-FROM metricas_generales
-
-UNION ALL
-
-SELECT 'ALERTAS', tipo_alerta, valor_alerta, '%', detalle
-FROM alertas
-ORDER BY seccion, descripcion;
+SELECT 
+    ciudad,
+    COUNT(*) AS total_clientes,
+    AVG(ingresos_mensuales) AS promedio_ingresos
+FROM 
+    clientes
+WHERE 
+    ingresos_mensuales IS NOT NULL
+GROUP BY 
+    ciudad
+ORDER BY 
+    promedio_ingresos DESC;
 ```
 
----
+**📊 Resultados Obtenidos**:
+- **Barranquilla**: 2 clientes, promedio $6,468,453
+- **Bucaramanga**: 6 clientes, promedio $6,445,098  
+- **Medellín**: 6 clientes, promedio $6,413,412
+- **Bogotá**: 3 clientes, promedio $4,751,162
+- **Cali**: 3 clientes, promedio $3,338,088
 
-## ✅ **Checklist de Validación**
-
-### **🎯 Dominio Básico**
-- [ ] Ejecutas funciones de agregación sin errores
-- [ ] Entiendes la diferencia entre COUNT(*) y COUNT(columna)
-- [ ] Puedes calcular porcentajes usando subconsultas
-- [ ] Manejas valores NULL en agregaciones
-
-### **📊 Dominio Intermedio**
-- [ ] Crear agrupaciones múltiples efectivas
-- [ ] Usar HAVING apropiadamente
-- [ ] Combinar GROUP BY con JOINs
-- [ ] Interpretar resultados en contexto bancario
-
-### **🚀 Dominio Avanzado**
-- [ ] Diseñar KPIs personalizados
-- [ ] Crear análisis temporales complejos
-- [ ] Identificar patrones y outliers
-- [ ] Proponer acciones basadas en datos
+**📝 Conceptos Aplicados**:
+- ✅ Función `AVG()` para calcular promedios
+- ✅ Combinación de `COUNT()` y `AVG()` en una consulta
+- ✅ Manejo de valores NULL con `WHERE IS NOT NULL`
+- ✅ Ordenamiento por promedio descendente
 
 ---
 
-## 📚 **Recursos de Profundización**
+### **🏆 EJERCICIO 8: Top 3 Clientes Más Ricos** ✅
+**🎯 Objetivo**: Identificar los 3 clientes con mayores ingresos usando `LIMIT`
 
-### **🔗 Enlaces Útiles**
-- [SQL Aggregate Functions - W3Schools](https://www.w3schools.com/sql/sql_count_avg_sum.asp)
-- [Advanced GROUP BY Techniques](https://modern-sql.com/feature/over)
-- [Banking KPIs Best Practices](https://www.klipfolio.com/resources/kpi-examples/banking)
+```sql
+SELECT 
+    nombres || ' ' || apellidos AS nombre_completo,
+    ingresos_mensuales,
+    ciudad
+FROM clientes 
+ORDER BY ingresos_mensuales DESC
+LIMIT 3;
+```
 
-### **📖 Lecturas Complementarias**
-- "SQL for Data Analysis" - Cathy Tanimura
-- "Learning SQL" - Alan Beaulieu
-- "The Data Warehouse Toolkit" - Ralph Kimball
+**📊 Resultados Obtenidos**:
+1. **Isabella Jiménez** (Bucaramanga) - $11,060,983
+2. **Pedro Morales** (Medellín) - $10,330,811
+3. **Sofia Rivera** (Bucaramanga) - $9,834,891
 
-### **🎯 Próximos Pasos**
-1. Completar el notebook `agregaciones_groupby_bancario.ipynb`
-2. Resolver ejercicios en `EJERCICIOS_PRACTICOS.md`
-3. Practicar con `practica_sql_avanzada.py`
-4. Avanzar al Módulo 3: JOINs y Relaciones
+**📝 Conceptos Aplicados**:
+- ✅ Concatenación de campos con `||`
+- ✅ Uso de `LIMIT` para Top N consultas
+- ✅ Identificación de clientes VIP
+- ✅ Ordenamiento para rankings
 
 ---
 
-**🏆 ¡Domina estas técnicas y estarás listo para análisis bancarios profesionales!**
+### **🏠 EJERCICIO 9: Clientes de Clase Media** ✅
+**🎯 Objetivo**: Filtrar clientes con ingresos entre 3M-7M usando `BETWEEN`
+
+```sql
+SELECT 
+    cliente_id,
+    nombres,
+    apellidos,
+    ciudad,
+    ingresos_mensuales
+FROM 
+    clientes
+WHERE 
+    ingresos_mensuales BETWEEN 3000000 AND 7000000
+ORDER BY 
+    ingresos_mensuales DESC;
+```
+
+**📊 Resultados Obtenidos**:
+- **Total encontrados**: 10 clientes (50% del total)
+- **Rango de ingresos**: $3,058,931 - $6,377,879
+- **Ciudad líder**: Medellín y Bogotá con 3 clientes cada una
+
+**📝 Conceptos Aplicados**:
+- ✅ Operador `BETWEEN` para rangos numéricos
+- ✅ Segmentación de clientes por ingresos
+- ✅ Análisis de clase media bancaria
+- ✅ Filtrado por criterios de negocio
+
+---
+
+### **📊 EJERCICIO 10: Distribución por Segmentos** ✅
+**🎯 Objetivo**: Contar clientes por cada segmento usando `GROUP BY`
+
+```sql
+SELECT 
+    segmento_cliente,
+    COUNT(*) AS cantidad_clientes
+FROM 
+    clientes
+WHERE 
+    segmento_cliente IS NOT NULL
+GROUP BY 
+    segmento_cliente
+ORDER BY 
+    cantidad_clientes DESC;
+```
+
+**📊 Resultados Obtenidos**:
+- **Estándar**: 8 clientes (40%)
+- **VIP**: 5 clientes (25%)  
+- **Premium**: 5 clientes (25%)
+- **Básico**: 2 clientes (10%)
+
+**📝 Conceptos Aplicados**:
+- ✅ Análisis de distribución de segmentos
+- ✅ Agrupación por categorías de clientes
+- ✅ Estrategia de marketing por segmentos
+- ✅ Filtrado de valores NULL
+
+---
+
+### **🏅 EJERCICIO 11: Ciudad con Mayor Suma Total** ✅
+**🎯 Objetivo**: Encontrar la ciudad más valiosa usando `SUM()` y `LIMIT`
+
+```sql
+SELECT 
+    ciudad,
+    SUM(ingresos_mensuales) AS ingresos_totales
+FROM 
+    clientes
+WHERE 
+    ingresos_mensuales IS NOT NULL
+GROUP BY 
+    ciudad
+ORDER BY 
+    ingresos_totales DESC
+LIMIT 1;
+```
+
+**📊 Resultado Obtenido**:
+- **🏆 GANADORA**: **Bucaramanga** con $38,670,590 en ingresos totales
+
+**📝 Conceptos Aplicados**:
+- ✅ Función `SUM()` para totales acumulados
+- ✅ Identificación de mercados más valiosos
+- ✅ Análisis territorial de ingresos
+- ✅ Combinación de `SUM()`, `GROUP BY` y `LIMIT`
+
+---
+
+### **💎 EJERCICIO 12: Porcentaje VIP por Ciudad** ✅
+**🎯 Objetivo**: Calcular porcentajes usando `CASE WHEN` avanzado
+
+```sql
+SELECT 
+    ciudad,
+    COUNT(*) AS total_clientes,
+    SUM(CASE WHEN segmento_cliente = 'VIP' THEN 1 ELSE 0 END) AS clientes_vip,
+    ROUND(
+        100.0 * SUM(CASE WHEN segmento_cliente = 'VIP' THEN 1 ELSE 0 END) / COUNT(*),
+        2
+    ) AS porcentaje_vip
+FROM clientes
+GROUP BY ciudad
+ORDER BY porcentaje_vip DESC;
+```
+
+**📊 Resultados Obtenidos**:
+- **Bucaramanga**: 6 clientes, 3 VIP (50.00%)
+- **Medellín**: 6 clientes, 2 VIP (33.33%)
+- **Cali**: 3 clientes, 0 VIP (0.00%)
+- **Bogotá**: 3 clientes, 0 VIP (0.00%)
+- **Barranquilla**: 2 clientes, 0 VIP (0.00%)
+
+**📝 Conceptos Aplicados**:
+- ✅ Expresiones condicionales `CASE WHEN`
+- ✅ Cálculo de porcentajes en SQL
+- ✅ Función `ROUND()` para decimales
+- ✅ Análisis VIP por territorio
+- ✅ Lógica condicional avanzada
+
+---
+
+## 🎯 **INSIGHTS CLAVE DESCUBIERTOS**
+
+### **🏆 Principales Hallazgos**:
+1. **Ciudad líder**: **Bucaramanga** domina en:
+   - Mayor suma total de ingresos ($38.67M)
+   - Mayor porcentaje de clientes VIP (50%)
+   - Concentra 2 de los 3 clientes más ricos
+
+2. **Segmentación de mercado**:
+   - 40% de clientes son **Estándar** (mayoría)
+   - 25% cada uno en **VIP** y **Premium**
+   - Solo 10% en segmento **Básico**
+
+3. **Oportunidades de negocio**:
+   - **Clase media**: 50% de clientes (3M-7M) representa gran potencial
+   - **Cali y Bogotá**: Sin clientes VIP, oportunidad de growth
+   - **Barranquilla**: Mejor promedio por cliente pero pocos clientes
+
+### **📊 Métricas Bancarias Calculadas**:
+- **Concentración VIP**: 25% de clientes genera el mayor valor
+- **Distribución territorial**: Desbalanceada, Bucaramanga concentra valor
+- **Potencial de crecimiento**: Ciudades sin VIP son oportunidad
+
+---
