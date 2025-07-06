@@ -13,7 +13,9 @@ import pandas as pd
 
 def conectar_bd():
     """Conecta a la base de datos bancaria"""
-    conn = sqlite3.connect('data/banking_core.db')
+    import os
+    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'banking_core.db')
+    conn = sqlite3.connect(db_path)
     print("✅ Conectado a la base de datos bancaria")
     return conn
 
